@@ -7,9 +7,7 @@ import kotlinx.coroutines.runBlocking
 import kotlin.system.exitProcess
 
 fun main() = runBlocking {
-    ObyteClient {
-
-    }.connect(ObyteTestHub) {
+    ObyteClient().connect(ObyteTestHub) {
 
         on<Message.JustSaying.Version> { version ->
             println(version)
