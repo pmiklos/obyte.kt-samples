@@ -1,11 +1,10 @@
-import app.obyte.client.ObyteClient
-import app.obyte.client.ObyteTestHub
-import app.obyte.client.connect
-import app.obyte.client.on
+import app.obyte.client.*
 import app.obyte.client.protocol.Message
 import kotlinx.html.dom.append
 import kotlinx.html.js.p
 import kotlin.browser.document
+import kotlin.browser.window
+import kotlin.coroutines.*
 
 suspend fun main() {
 
@@ -24,6 +23,13 @@ suspend fun main() {
             document.body!!.append.p { +"RECEIVED: $request" }
             document.body!!.append.p { +"SENDING: $response" }
             respond(response)
+
+            launch {
+                while (true) {
+                    delay(10000)
+                    heartbeat()
+                }
+            }
         }
 
         on<Message.JustSaying.ExchangeRates> { rates ->
@@ -31,4 +37,17 @@ suspend fun main() {
         }
 
     }
+}
+
+fun launch(block: suspend () -> Unit) {
+    block.startCoroutine(object : Continuation<Unit> {
+        override val context = EmptyCoroutineContext
+        override fun resumeWith(result: Result<Unit>) = Unit
+    })
+}
+
+suspend fun delay(ms: Int): Unit = suspendCoroutine { continuation ->
+    window.setTimeout({
+        continuation.resume(Unit)
+    }, ms)
 }
