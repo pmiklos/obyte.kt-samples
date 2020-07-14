@@ -1,3 +1,3 @@
-rootProject.name = "obyte.kt-samples"
+rootProject.name = "obytekt-samples"
 include("jvm")
 include("js")
