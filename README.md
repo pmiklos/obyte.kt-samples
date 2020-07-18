@@ -11,7 +11,7 @@ You have to build Obyte.kt library first and publish it into your local maven re
 ```bash
 git clone https://github.com/pmiklos/obyte.kt.git
 cd obyte.kt
-git checkout 0.0.1
+git checkout 0.2.0
 ./gradlew publishToMavenLocal
 ```
 Check if the libraries are successfully installed:

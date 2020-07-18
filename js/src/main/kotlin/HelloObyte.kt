@@ -1,7 +1,11 @@
 import app.obyte.client.*
-import app.obyte.client.protocol.Message
+import app.obyte.client.protocol.JustSaying
+import app.obyte.client.protocol.Request
+import app.obyte.client.protocol.Response
+import app.obyte.client.protocol.UnitHash
 import kotlinx.html.dom.append
 import kotlinx.html.js.p
+import kotlinx.html.js.textArea
 import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.coroutines.*
@@ -14,12 +18,12 @@ suspend fun main() {
             document.body!!.append.p { +"Connected" }
         }
 
-        on<Message.JustSaying.Version> {
+        on<JustSaying.Version> {
             document.body!!.append.p { +"RECEIVED: $it" }
         }
 
-        on<Message.Request.Subscribe> { request ->
-            val response = Message.Response.Subscribed(request.tag)
+        on<Request.Subscribe> { request ->
+            val response = Response.Subscribed(request.tag)
             document.body!!.append.p { +"RECEIVED: $request" }
             document.body!!.append.p { +"SENDING: $response" }
             respond(response)
@@ -30,9 +34,17 @@ suspend fun main() {
                     heartbeat()
                 }
             }
+
+            getWitnesses()?.let {
+                document.body!!.append.p { +"RECEIVED: $it" }
+            }
+
+            getJoint(UnitHash("3/9rpEBQWTsxtUxlq+JiZUO8UM36A9kZMndhCaGrFnw="))?.let {
+                document.body!!.append.p { +"RECEIVED $it" }
+            }
         }
 
-        on<Message.JustSaying.ExchangeRates> { rates ->
+        on<JustSaying.ExchangeRates> { rates ->
             document.body!!.append.p { +"RECEIVED: $rates" }
         }
 

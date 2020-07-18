@@ -1,3 +1,5 @@
+val obytektVersion: String by project
+
 plugins {
     application
     kotlin("jvm")
@@ -12,7 +14,7 @@ application {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("app.obyte.client:obytekt-jvm:0.0.1")
+    implementation("app.obyte.client:obytekt-jvm:$obytektVersion")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
 }
 

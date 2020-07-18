@@ -1,10 +1,12 @@
+val obytektVersion: String by project
+
 plugins {
     id("org.jetbrains.kotlin.js")
 }
 
 dependencies {
     implementation(kotlin("stdlib-js"))
-    implementation("app.obyte.client:obytekt-js:0.0.1")
+    implementation("app.obyte.client:obytekt-js:$obytektVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-html-js:0.7.1")
 
     // declare NPM dependencies to fix bugs with ktor client build
