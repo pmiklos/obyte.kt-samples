@@ -9,6 +9,10 @@ dependencies {
     implementation("app.obyte.client:obytekt-js:$obytektVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-html-js:0.7.1")
 
+    implementation(npm("create-hash"))
+    implementation(npm("thirty-two"))
+    implementation(npm("secp256k1"))
+
     // declare NPM dependencies to fix bugs with ktor client build
     implementation(npm("text-encoding"))
     implementation(npm("bufferutil"))

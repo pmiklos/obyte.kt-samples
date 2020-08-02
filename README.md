@@ -11,7 +11,7 @@ You have to build Obyte.kt library first and publish it into your local maven re
 ```bash
 git clone https://github.com/pmiklos/obyte.kt.git
 cd obyte.kt
-git checkout 0.2.0
+git checkout 0.3.0
 ./gradlew publishToMavenLocal
 ```
 Check if the libraries are successfully installed:
@@ -28,7 +28,17 @@ To run the JVM example:
 
 ## Javascript (Browser) 
 
+There are multiple Javascript examples you can run:
+
+* simple - a very basic example of how to listen on Obyte events and send simple requests
+* wallet - a simplified web wallet capable of listing balances, sending byte and asset payments
+
 ```bash
-./gradlew js:run
+./gradlew js:simple:run
 ```
+
+```bash
+./gradlew js:wallet:run
+```
+
 This will start webpack and open the default browser with the application. To see what is going on under the hood, open the browser developer console.

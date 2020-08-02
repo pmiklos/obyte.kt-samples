@@ -1,8 +1,5 @@
 import app.obyte.client.*
-import app.obyte.client.protocol.JustSaying
-import app.obyte.client.protocol.Message
-import app.obyte.client.protocol.Request
-import app.obyte.client.protocol.UnitHash
+import app.obyte.client.protocol.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -22,12 +19,21 @@ fun main() = runBlocking {
             }
 
             getWitnesses()?.apply {
-                getGetParentsAndLastBallAndWitnessesUnit(witnesses)
+                getGetParentsAndLastBallAndWitnessesUnit(witnesses)?.apply {
+                    request(
+                        Request.PickDivisibleCoinsForAmount(
+                            addresses = listOf(Address("2FF7PSL7FYXVU5UIQHCVDTTPUOOG75GX")),
+                            amount = 10000,
+                            lastBallMci = lastStableMcBallMci,
+                            spendUnconfirmed = SpendUnconfirmed.OWN
+                        )
+                    )
+                }
             }
 
-            getDefinitionForAddress("2FF7PSL7FYXVU5UIQHCVDTTPUOOG75GX")
+            getDefinitionForAddress(Address("2FF7PSL7FYXVU5UIQHCVDTTPUOOG75GX"))
 
-            getJoint(UnitHash("3/9rpEBQWTsxtUxlq+JiZUO8UM36A9kZMndhCaGrFnw="))?.apply {
+            getJoint(UnitHash("YJI2qpj6xALKsS/cBSiMdiKbTEOd4ffIBL5JKcjnXek="))?.apply {
                 println(joint.unit.unit)
             }
         }
