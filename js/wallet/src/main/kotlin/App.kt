@@ -2,10 +2,8 @@ import app.obyte.client.compose.Wallet
 import app.obyte.client.newAddressToWatch
 import app.obyte.client.on
 import app.obyte.client.postJoint
-import app.obyte.client.protocol.Address
-import app.obyte.client.protocol.Balance
-import app.obyte.client.protocol.JustSaying
-import app.obyte.client.protocol.UnitHash
+import app.obyte.client.protocol.*
+import kotlinx.coroutines.cancel
 import react.*
 
 external interface AppState : RState {
@@ -34,13 +32,15 @@ class App : RComponent<RProps, AppState>() {
                     val obyte = Obyte {
                         onConnected {
                             newAddressToWatch(wallet.address)
+                            setState {
+                                this.statusMessage = "Connected"
+                            }
                         }
 
                         on<JustSaying.HaveUpdates> {
                             getBalance(wallet.address) { balance ->
                                 setState {
                                     this.balance = balance
-                                    this.statusMessage = null
                                 }
                             }
                         }
@@ -48,7 +48,6 @@ class App : RComponent<RProps, AppState>() {
                             getBalance(wallet.address) { balance ->
                                 setState {
                                     this.balance = balance
-                                    this.statusMessage = null
                                 }
                             }
                         }
@@ -59,7 +58,7 @@ class App : RComponent<RProps, AppState>() {
                     setState {
                         this.wallet = wallet
                         this.obyte = obyte
-                        this.statusMessage = "Initializing..."
+                        this.statusMessage = "Connecting..."
                     }
                 }
             }
@@ -98,8 +97,11 @@ class App : RComponent<RProps, AppState>() {
                     }
                 }
                 onClose = {
+                    state.obyte?.cancel("Stop")
                     setState {
                         wallet = null
+                        balance = null
+                        statusMessage = null
                     }
                 }
             }
