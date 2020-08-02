@@ -131,6 +131,7 @@ fun RBuilder.collapsingCard(
                 attrs["data-target"] = "#collapse-$id"
                 attrs["aria-expanded"] = false
                 attrs["aria-controls"] = id
+                attrs["role"] = "button"
 
                 with(configuration) {
                     headerBlock()
