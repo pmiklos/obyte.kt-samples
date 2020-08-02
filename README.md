@@ -2,7 +2,9 @@
 
 Obyte.kt is a multi-platform Kotlin library to communicate with hub nodes in the Obyte cryptocurrency network.
 
-All examples will connect to the Obyte testnet and start a heartbeat to keep the connection open while displaying the incoming and outgoing messages.
+The examples in this project will connect to the Obyte testnet.
+
+See [live demo page](https://pmiklos.github.io/obyte.kt-samples/)
 
 ## Before you start
 

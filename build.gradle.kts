@@ -29,6 +29,8 @@ tasks.register("gh-pages", Copy::class) {
     mkdir("$buildDir/gh-pages")
     destinationDir = file("$buildDir/gh-pages")
 
+    from(file("pages"))
+
     into("simple") {
         from(project("js:simple").file("build/distributions"))
     }
