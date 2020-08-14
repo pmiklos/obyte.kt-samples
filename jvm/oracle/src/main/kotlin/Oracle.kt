@@ -1,6 +1,7 @@
 import app.obyte.client.*
 import app.obyte.client.compose.Wallet
 import app.obyte.client.protocol.Address
+import app.obyte.client.protocol.JustSaying
 import app.obyte.client.protocol.Request
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -21,32 +22,23 @@ fun main() = runBlocking {
         exitProcess(-1)
     }
 
+    println("Generating wallet (this may take some time)")
+
+    val wallet = Wallet.fromSeed(phrase)
+
+    println("Oracle address is: ${wallet.address.value}")
+
     println("Connecting to Obyte...")
 
     ObyteClient().connect(ObyteTestHub) {
 
         onConnected {
             println("Connected")
-            println("Generating wallet (this may take long minutes)")
-
-            val wallet = Wallet.fromSeed(phrase)
-            println("Oracle address is: ${wallet.address.value}")
-
-            waitForBalance(wallet.address)
-
-            val unit = composer.unit(wallet) {
-                dataFeed {
-                    "Obyte.kt" to random.nextInt().toString()
-                }
-            }
-
-            val result = postJoint(unit)
-            if (result?.response == "accepted") {
-                println("Successfully posted unit ${unit.unit}")
-                exitProcess(0)
+            if (hasEnoughBalance(wallet.address)) {
+                postRandomNumber(wallet)
             } else {
-                println("Failed to post unit: \n$unit")
-                exitProcess(-1)
+                println("Not enough balance yet, waiting for at least 1000 bytes")
+                newAddressToWatch(wallet.address)
             }
         }
 
@@ -57,24 +49,45 @@ fun main() = runBlocking {
                 while (true) {
                     delay(15000)
                     heartbeat()
+                    print(".")
                 }
+            }
+        }
+
+        on<JustSaying.HaveUpdates> {
+            if (hasEnoughBalance(wallet.address)) {
+                postRandomNumber(wallet)
+            }
+        }
+
+        on<JustSaying.Joint> {
+            if (hasEnoughBalance(wallet.address)) {
+                postRandomNumber(wallet)
             }
         }
     }
 
 }
 
-suspend fun ObyteClientContext.waitForBalance(address: Address) {
-    var balance = getByteBalance(address)
-    println("Balance: $balance")
-    if (balance == null || balance.stable < 1000) {
-        println("Not enough balance yet, waiting for at least 1000 bytes")
+suspend fun ObyteClientContext.hasEnoughBalance(address: Address): Boolean {
+    val balance = getByteBalance(address)
+    return balance != null && balance.stable >= 1000
+}
 
-        while (balance == null || balance.stable < 1000) {
-            delay(10000)
-            print(".")
-            balance = getByteBalance(address)
+suspend fun ObyteClientContext.postRandomNumber(wallet: Wallet) {
+    val unit = composer.unit(wallet) {
+        dataFeed {
+            "Obyte.kt" to random.nextInt().toString()
         }
-        println()
+    }
+
+    val result = postJoint(unit)
+
+    if (result?.response == "accepted") {
+        println("Successfully posted unit ${unit.unit}")
+        exitProcess(0)
+    } else {
+        println("Failed to post unit: \n$unit")
+        exitProcess(-1)
     }
 }
