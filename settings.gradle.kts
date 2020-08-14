@@ -1,4 +1,5 @@
 rootProject.name = "obytekt-samples"
-include("jvm")
+include("jvm:simple")
+include("jvm:oracle")
 include("js:simple")
 include("js:wallet")

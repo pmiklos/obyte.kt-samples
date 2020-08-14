@@ -22,10 +22,17 @@ ls ~/.m2/repository/app/obyte/client/
 ```
 ## JVM
 
-To run the JVM example:
+To run the JVM examples:
+
+* simple - a very basic example of how to listen on Obyte events and send simple requests
+* oracle - a simple oracle that posts random numbers to the DAG
 
 ```bash
-./gradlew jvm:run
+./gradlew jvm:simple:run
+```
+
+```bash
+./gradlew --console plain jvm:oracle:run
 ```
 
 ## Javascript (Browser) 
