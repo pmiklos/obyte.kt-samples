@@ -10,6 +10,7 @@ import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.get
 import react.*
 import react.dom.*
+import react.router.dom.routeLink
 import kotlin.random.Random
 
 data class GiftCardCreation(
@@ -114,11 +115,9 @@ class IndexComponent(props: IndexProps) : RComponent<IndexProps, IndexState>(pro
                     +"PIN: ${giftCard.pin}"
                 }
                 p {
-
-                    // routeLink("/giftcard/${giftCard.token}") { +"Link to GiftCard (share with ${giftCard.name})" }
-
-                    a(href = "/#/giftcard/${giftCard.token}", target = ATarget.blank) {
+                    routeLink("/giftcard/${giftCard.token}") {
                         +"Link to GiftCard (share with ${giftCard.name})"
+                        attrs.asDynamic().target = ATarget.blank
                     }
                 }
 
