@@ -1,5 +1,6 @@
 import app.obyte.client.compose.Wallet
 import app.obyte.client.protocol.Address
+import kotlinx.html.ATarget
 import kotlinx.html.ButtonType
 import kotlinx.html.InputType
 import kotlinx.html.js.onClickFunction
@@ -9,7 +10,6 @@ import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.get
 import react.*
 import react.dom.*
-import react.router.dom.routeLink
 import kotlin.random.Random
 
 data class GiftCardCreation(
@@ -25,9 +25,14 @@ external interface IndexProps : RProps {
 
 external interface IndexState : RState {
     var giftCard: GiftCardCreation?
+    var giftCardLoaded: Boolean?
 }
 
 class IndexComponent(props: IndexProps) : RComponent<IndexProps, IndexState>(props) {
+
+    override fun IndexState.init(props: IndexProps) {
+        giftCardLoaded = false
+    }
 
     override fun RBuilder.render() {
         if (state.giftCard == null) return createCard()
@@ -79,6 +84,7 @@ class IndexComponent(props: IndexProps) : RComponent<IndexProps, IndexState>(pro
                                 pin = pin,
                                 name = name.value
                             )
+                            giftCardLoaded = false
                         }
                     }
                 }
@@ -88,6 +94,11 @@ class IndexComponent(props: IndexProps) : RComponent<IndexProps, IndexState>(pro
 
     private fun RBuilder.reviewCard() {
         div(classes = "text-center bg-light mt-5 p-5 rounded") {
+            if (state.giftCardLoaded == true) {
+                p(classes = "alert alert-success") {
+                    +"Remember to share the PIN code and the gift card URL with ${state.giftCard?.name}!"
+                }
+            }
             h1 {
                 +"Gift card details"
             }
@@ -103,24 +114,32 @@ class IndexComponent(props: IndexProps) : RComponent<IndexProps, IndexState>(pro
                     +"PIN: ${giftCard.pin}"
                 }
                 p {
-                    routeLink("/giftcard/${giftCard.token}") {
+
+                    // routeLink("/giftcard/${giftCard.token}") { +"Link to GiftCard (share with ${giftCard.name})" }
+
+                    a(href = "/#/giftcard/${giftCard.token}", target = ATarget.blank) {
                         +"Link to GiftCard (share with ${giftCard.name})"
                     }
                 }
 
                 button(classes = "btn btn-primary") {
-                    +"Yes, top it up!"
+                    if (state.giftCardLoaded == true) {
+                        +"Loaded!"
+                    } else {
+                        +"Yes, top it up!"
+                    }
 
                     attrs {
+                        disabled = state.giftCardLoaded == true
+
                         onClickFunction = {
                             props.onGiftCardCreated(giftCard)
                             setState {
-                                this.giftCard = null
+                                giftCardLoaded = true
                             }
                         }
                     }
                 }
-
             } else {
                 p { +"No gift card created" }
             }
