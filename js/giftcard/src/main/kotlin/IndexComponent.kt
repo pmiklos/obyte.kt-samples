@@ -164,18 +164,3 @@ fun RBuilder.index(handler: IndexProps.() -> Unit): ReactElement {
         this.attrs(handler)
     }
 }
-
-fun createWallet(token: String, name: String, pin: String): Wallet? {
-    val sha256 = CreateHash("sha256")
-    sha256.update(token)
-    sha256.update(name)
-    sha256.update(pin)
-    val seed = sha256.digest().toString("base64")
-
-    return try {
-        Wallet.fromSeed(seed)
-    } catch (e: Exception) {
-        console.error(e.message)
-        null
-    }
-}

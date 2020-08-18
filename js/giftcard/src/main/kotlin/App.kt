@@ -156,6 +156,3 @@ class App(props: AppProps) : RComponent<AppProps, AppState>(props) {
         }
     }
 }
-
-
-val Balance.total: Long get() = stable + pending

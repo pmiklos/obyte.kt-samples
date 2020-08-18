@@ -1,4 +1,5 @@
 import app.obyte.client.*
+import app.obyte.client.compose.Wallet
 import app.obyte.client.protocol.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -46,3 +47,21 @@ suspend fun ObyteClientContext.getBalance(address: Address, block: (Map<UnitHash
         }
     }
 }
+
+fun createWallet(token: String, name: String, pin: String): Wallet? {
+    val sha256 = CreateHash("sha256")
+    sha256.update(token)
+    sha256.update(name)
+    sha256.update(pin)
+    val seed = sha256.digest().toString("base64")
+
+    return try {
+        Wallet.fromSeed(seed)
+    } catch (e: Exception) {
+        console.error(e.message)
+        null
+    }
+}
+
+val Balance.total: Long get() = stable + pending
+
