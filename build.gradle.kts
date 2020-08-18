@@ -37,4 +37,7 @@ tasks.register("gh-pages", Copy::class) {
     into("wallet") {
         from(project("js:wallet").file("build/distributions"))
     }
+    into("giftcard") {
+        from(project("js:giftcard").file("build/distributions"))
+    }
 }
