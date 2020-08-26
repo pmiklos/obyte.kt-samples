@@ -1,7 +1,13 @@
 val obytektVersion: String by project
 
 plugins {
-    id("org.jetbrains.kotlin.js")
+    kotlin("js") version "1.4.0"
+}
+
+kotlin {
+    js {
+        browser()
+    }
 }
 
 dependencies {
@@ -17,21 +23,14 @@ dependencies {
     implementation(npm("react-dom", "16.13.1"))
 
     // obytekt deps
-    implementation(npm("create-hash"))
-    implementation(npm("thirty-two"))
-    implementation(npm("secp256k1"))
+    implementation(npm("create-hash", "^1.2.0"))
+    implementation(npm("thirty-two", "^1.0.2"))
+    implementation(npm("secp256k1", "^4.0.2"))
 
     // declare NPM dependencies to fix bugs with ktor client build
-    implementation(npm("text-encoding"))
-    implementation(npm("bufferutil"))
-    implementation(npm("utf-8-validate"))
-    implementation(npm("abort-controller"))
-    implementation(npm("fs"))
-
-}
-
-kotlin.target.browser {
-    dceTask {
-        keep("ktor-ktor-io.\$\$importsForInline\$\$.ktor-ktor-io.io.ktor.utils.io")
-    }
+    implementation(npm("text-encoding", "^0.7.0"))
+    implementation(npm("bufferutil", "^4.0.1"))
+    implementation(npm("utf-8-validate", "^5.0.2"))
+    implementation(npm("abort-controller", "^3.0.0"))
+    implementation(npm("fs", "^0.0.2"))
 }

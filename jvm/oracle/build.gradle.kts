@@ -2,7 +2,7 @@ val obytektVersion: String by project
 
 plugins {
     application
-    kotlin("jvm")
+    kotlin("jvm") version "1.4.0"
 }
 
 group = "app.obyte.client.samples"
